@@ -57,15 +57,27 @@ namespace ConsoleUtil.Services
                 {
                     StartDirectory = ParseStartDirectory(parameters[0]);
 
-                    Option = ParseOperation(parameters[1]);
-
-                    if (Option != null)
+                    if (StartDirectory != null)
                     {
-                        isParsed = true;
+                        Option = ParseOperation(parameters[1]);
 
-                        if (parameters.Length == UPPER_BOUND)
+                        if (Option != null)
                         {
-                            ResultFilePath = ParseResultFilePath(parameters[2]);
+                            isParsed = true;
+
+                            if (parameters.Length == UPPER_BOUND)
+                            {
+                                var resultFilePath = ParseResultFilePath(parameters[2]);
+
+                                if (!string.IsNullOrWhiteSpace(resultFilePath))
+                                {
+                                    ResultFilePath = resultFilePath;
+                                }
+                                else
+                                {
+                                    isParsed = false;
+                                }
+                            }
                         }
                     }
                 }
@@ -132,7 +144,9 @@ namespace ConsoleUtil.Services
                 
                 if (Directory.Exists(parentDir))
                 {
-                    if (IsCorrectFileName(Path.GetFileName(resultFilePath)))
+                    var fileName = Path.GetFileName(resultFilePath);
+                    
+                    if (IsCorrectFileName(fileName))
                     {
                         resultPath = resultFilePath;
                     }
@@ -144,7 +158,6 @@ namespace ConsoleUtil.Services
                 else
                 {
                     // logger
-                    resultPath = DEFAULT_RESULT_PATH;
                 }
             }
             else
@@ -165,11 +178,11 @@ namespace ConsoleUtil.Services
                 var parentDirInfo = Directory.GetParent(filePath);
                 parentDir = parentDirInfo.FullName;
             }
-            catch (DirectoryNotFoundException ex)
+            catch (ArgumentException ex)
             {
                 // logger
             }
-            catch (ArgumentException ex)
+            catch (NullReferenceException ex)
             {
                 // logger
             }
@@ -192,18 +205,13 @@ namespace ConsoleUtil.Services
             var badCharacters =
                 new Regex("[" + Regex.Escape(new string(Path.GetInvalidPathChars())) + "]");
 
-            string fileExtension = null;
+            var fileExtension = Path.GetExtension(file);
 
-            try
-            {
-                fileExtension = Path.GetExtension(file);
-            }
-            catch (ArgumentException ex)
-            {
-                // logger
-            }
+            var badFile = badCharacters.IsMatch(file);
 
-            if (badCharacters.IsMatch(file) || fileExtension != TXT_FILE_EXTENSION)
+            var wrongFileExtension = fileExtension != TXT_FILE_EXTENSION;
+
+            if (badFile || wrongFileExtension)
             {
                 result = false;
             }
