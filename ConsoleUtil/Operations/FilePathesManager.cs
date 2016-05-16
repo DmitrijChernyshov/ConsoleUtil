@@ -15,15 +15,7 @@ namespace ConsoleUtil.Operations
         {
             string[] filesPathes = null;
 
-            try
-            {
-                filesPathes = GetFilesFromDirectory(startPath, searchPattern);
-            }
-            catch (ArgumentException)
-            {
-                // logger
-                throw;
-            }
+            filesPathes = GetFilesFromDirectory(startPath, searchPattern);
             
             return filesPathes;
         }
@@ -41,11 +33,6 @@ namespace ConsoleUtil.Operations
                         startPath,
                         searchPattern,
                         SearchOption.AllDirectories);
-            }
-            catch (DirectoryNotFoundException ex)
-            {
-                // logger
-                throw;
             }
             catch (ArgumentException ex)
             {

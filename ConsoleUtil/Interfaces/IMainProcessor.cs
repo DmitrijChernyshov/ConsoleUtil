@@ -6,7 +6,7 @@ namespace ConsoleUtil.Interfaces
     {
         Task StartAsync();
 
-        Task<bool> ProcessWrittingResultAsync(Task<string[]> filesdata);
+        bool ProcessWrittingResult(string[] filesdata);
 
         bool Exit();
     }

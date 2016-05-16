@@ -49,22 +49,28 @@ namespace ConsoleUtil
 
                     if (FileOperation != null)
                     {
-                        var taskResult = FileOperation.PerformOperation(_parser.StartDirectory);
+                        var taskFileOperation = FileOperation.PerformOperation(_parser.StartDirectory);
 
-                        if (ProcessFileOperation(taskResult))
+                        var operationResult = await ProcessFileOperation(taskFileOperation);
+
+                        if (operationResult != null)
                         {
-                            await ProcessWrittingResultAsync(taskResult);
+                            _console.WriteNewBlankLine();
+                            _console.Write("Done");
+                            _console.WriteNewBlankLine();
+
+                            ProcessWrittingResult(operationResult);
                         }
                     }
                     else
                     {
-                        _console.Write("Error has been occured. Check log file for details.");
+                        _console.WriteLine("Error has been occured. Check log file for details.");
                         // logger
                     }
                 }
                 else
                 {
-                    _console.Write("Error has been occured. Check log file for details.");
+                    _console.WriteLine("Error has been occured. Check log file for details.");
                     // logger
                 }
 
@@ -73,9 +79,9 @@ namespace ConsoleUtil
             }
         }
 
-        public bool ProcessFileOperation(Task<string[]> taskResult)
+        public async Task<string[]> ProcessFileOperation(Task<string[]> taskResult)
         {
-            var fileProcessingResult = false;
+            string[] filesData = null;
 
             if (taskResult.Exception == null)
             {
@@ -86,22 +92,28 @@ namespace ConsoleUtil
                     _console.Write(PROGRESS_UNIT);
                     Thread.Sleep(200);
                 }
-
-                _console.WriteNewBlankLine();
-                _console.Write("Done");
-                _console.WriteNewBlankLine();
-                fileProcessingResult = true;
+                
+                try
+                {
+                    filesData = await taskResult;
+                }
+                catch (Exception)
+                {
+                    _console.WriteNewBlankLine();
+                    _console.WriteLine("Error has been occured. Check log file for details.");
+                    // logger
+                }
             }
             else
             {
-                _console.Write("Error has been occured. Check log file for details.");
+                _console.WriteLine("Error has been occured. Check log file for details.");
                 // logger
             }
 
-            return fileProcessingResult;
+            return filesData;
         }
         
-        public async Task<bool> ProcessWrittingResultAsync(Task<string[]> filesdata)
+        public bool ProcessWrittingResult(string[] filesdata)
         {
             var writtingResult = false;
 
@@ -110,7 +122,7 @@ namespace ConsoleUtil
             try
             {
                 writtingResult = _fileManager.WriteToFile(
-                    await filesdata,
+                     filesdata,
                     _parser.ResultFilePath);
             }
             catch (Exception ex)
