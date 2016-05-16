@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,11 +47,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependencyResolvers\DependencyResolver.cs" />
+    <Compile Include="Interfaces\IConsoleManager.cs" />
+    <Compile Include="Interfaces\IFilePathesManager.cs" />
+    <Compile Include="Interfaces\IFilePathesService.cs" />
+    <Compile Include="Interfaces\IFileManager.cs" />
+    <Compile Include="Interfaces\IMainProcessor.cs" />
+    <Compile Include="Interfaces\IOperation.cs" />
+    <Compile Include="Interfaces\IParametersParser.cs" />
+    <Compile Include="Interfaces\IOperationFactory.cs" />
+    <Compile Include="MainProcessor.cs" />
+    <Compile Include="OperationFactory.cs" />
+    <Compile Include="OperationsEnum.cs" />
+    <Compile Include="Operations\OperationAll.cs" />
+    <Compile Include="Operations\FilePathesManager.cs" />
+    <Compile Include="Operations\OperationCpp.cs" />
+    <Compile Include="Operations\OperationReversed1.cs" />
+    <Compile Include="Operations\OperationReversed2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\ErrorMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\CmdParametersParser.cs" />
+    <Compile Include="Services\ConsoleManager.cs" />
+    <Compile Include="Services\FileManager.cs" />
+    <Compile Include="Services\FilesPathesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ErrorMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

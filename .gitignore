@@ -1,2 +1,5 @@
 ConsoleUtil/bin/
 ConsoleUtil/obj/
+ConsoleUtil.Tests/bin/
+ConsoleUtil.Tests/obj/
+packages/

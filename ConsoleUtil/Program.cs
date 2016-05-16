@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ConsoleUtil.DependencyResolvers;
+using ConsoleUtil.Interfaces;
+using Ninject;
 
 namespace ConsoleUtil
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
+            var kernel = new StandardKernel(new DependencyResolver());
+
+            var mainProcessor = kernel.Get<IMainProcessor>();
+            mainProcessor.StartAsync().Wait();
         }
     }
 }
