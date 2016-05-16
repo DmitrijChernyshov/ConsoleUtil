@@ -19,6 +19,13 @@ namespace ConsoleUtil.Tests
         private const string CORRECT_START_PATH = @"d:\test\start";
         private const string CORRECT_RESULT_FILE_PATH = @"d:\test\results.txt";
 
+        private readonly string[] _resultFilePathes =
+        {
+            @"d:\one.txt",
+            @"d:\two.txt",
+            @"d:\three.txt"
+        };
+
         private Operation _correctOperation = Operation.Cpp;
 
         private IKernel _kernel;
@@ -162,7 +169,7 @@ namespace ConsoleUtil.Tests
 
             stubOperation
                 .Setup(m => m.PerformOperation(It.IsAny<string>()))
-                .Returns(Task.FromResult(It.IsAny<string[]>()));
+                .Returns(Task.FromResult(_resultFilePathes));
 
             return stubOperation;
         }
