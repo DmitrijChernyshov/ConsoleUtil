@@ -42,15 +42,20 @@ namespace ConsoleUtil
 
                 if (parseResult)
                 {
-                    if (FileOperation == null)
-                    {
-                        FileOperation = _factory.CreateFileOperation(_parser.Option);
-                    }
-
+                    Task<string[]> taskFileOperation = null;
+                    
                     if (FileOperation != null)
                     {
-                        var taskFileOperation = FileOperation.PerformOperation(_parser.StartDirectory);
+                        taskFileOperation = FileOperation.PerformOperation(_parser.StartDirectory);
+                    }
+                    else
+                    {
+                        var fileOperation = _factory.CreateFileOperation(_parser.Option);
+                        taskFileOperation = fileOperation.PerformOperation(_parser.StartDirectory);
+                    }
 
+                    if (taskFileOperation != null)
+                    {
                         var operationResult = await ProcessFileOperation(taskFileOperation);
 
                         if (operationResult != null)

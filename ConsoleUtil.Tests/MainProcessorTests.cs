@@ -52,7 +52,7 @@ namespace ConsoleUtil.Tests
         public async Task StartAsync_CorrectParametersPassed_OperationSuccessfullyPerformed()
         {
             // Arrange
-            
+
             var mainProcessor = 
                 new MainProcessor(
                     _stubConsoleManger.Object,
@@ -77,38 +77,6 @@ namespace ConsoleUtil.Tests
                 sfw.WriteToFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()),
                 Times.Once);
         }
-
-        [Test]
-        public async Task StartAsync_IncorrectOperation_OperationFaulted()
-        {
-            // Arrange
-            Operation? incorrectOperation = null;
-
-            _stubParser = StubParametersParser(true, CORRECT_START_PATH, incorrectOperation);
-
-            var mainProcessor =
-                new MainProcessor(
-                    _stubConsoleManger.Object,
-                    _stubParser.Object,
-                    _stubFactory.Object,
-                    _stubFileWriter.Object);
-
-            // Act
-            await mainProcessor.StartAsync();
-
-            // Assert
-            _stubConsoleManger.Verify(scm => scm.ReadLine(), Times.Exactly(2));
-
-            _stubParser.Verify(sp => sp.Parse(It.IsAny<string>()), Times.Once);
-
-            _stubOperation.Verify(so => so.PerformOperation(It.IsAny<string>()),
-                Times.Never);
-
-            _stubFileWriter.Verify(sfw =>
-                sfw.WriteToFile(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()),
-                Times.Never);
-        }
-
 
         #region TestHelpers
         private Mock<IConsoleManager> StubConsoleManger()
@@ -152,13 +120,13 @@ namespace ConsoleUtil.Tests
             return stubParser;
         }
 
-        private Mock<IOperationFactory> StubOperationFactory()
+        private Mock<IOperationFactory> StubOperationFactory(string operation = CPP_OPERATION)
         {
             var stubFactory = new Mock<IOperationFactory>();
 
             stubFactory
                 .Setup(m => m.CreateFileOperation(It.IsAny<Operation>()))
-                .Returns(_kernel.Get<IOperation>(CPP_OPERATION));
+                .Returns(_kernel.Get<IOperation>(operation));
 
             return stubFactory;
         }

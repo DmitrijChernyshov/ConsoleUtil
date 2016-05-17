@@ -39,6 +39,8 @@ namespace ConsoleUtil.Services
 
         public bool Parse(string lineToParse)
         {
+            ClearProperties();
+
             var isParsed = false;
 
             if (string.IsNullOrWhiteSpace(lineToParse))
@@ -84,6 +86,13 @@ namespace ConsoleUtil.Services
             }
             
             return isParsed;
+        }
+
+        public virtual void ClearProperties()
+        {
+            StartDirectory = null;
+            Option = null;
+            ResultFilePath = null;
         }
 
         public virtual string[] SplitParams(string lineToParse)
